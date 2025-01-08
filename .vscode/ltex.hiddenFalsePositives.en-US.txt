@@ -1,0 +1,1 @@
+{"rule":"A_INFINITIVE","sentence":"^\\QThen, within the development tools press the reload shortcuts \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q or \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q to reload the app.\\E$"}
