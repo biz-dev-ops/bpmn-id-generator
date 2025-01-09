@@ -25,7 +25,9 @@ const ELEMENT_TYPE_MAPPING = {
 
   "bpmn:Participant": "Participant",
 
-  "bpmn:SequenceFlow": "Flow"
+  "bpmn:SequenceFlow": "Flow",
+
+  "bpmn:SubProcess": "SubProcess"
 };
 
 class UpdateIdCommandInterceptor extends CommandInterceptor {
@@ -35,6 +37,7 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
     this._elementRegistry = elementRegistry;
 
     this.postExecuted("element.updateLabel", context => {
+      
       const { element } = context;
       this._changeId(element);
     }, true);
@@ -49,7 +52,7 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
       catch { }
     }, true);
 
-    eventBus.on("import.done", (e) => {
+    eventBus.on("import.done", () => {
       try
       {
         this._elementRegistry.forEach(element => {

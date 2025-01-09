@@ -41,7 +41,9 @@ const ELEMENT_TYPE_MAPPING = {
 
   "bpmn:Participant": "Participant",
 
-  "bpmn:SequenceFlow": "Flow"
+  "bpmn:SequenceFlow": "Flow",
+
+  "bpmn:SubProcess": "SubProcess"
 };
 
 class UpdateIdCommandInterceptor extends diagram_js_lib_command_CommandInterceptor_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
@@ -51,6 +53,7 @@ class UpdateIdCommandInterceptor extends diagram_js_lib_command_CommandIntercept
     this._elementRegistry = elementRegistry;
 
     this.postExecuted("element.updateLabel", context => {
+      
       const { element } = context;
       this._changeId(element);
     }, true);
@@ -65,7 +68,7 @@ class UpdateIdCommandInterceptor extends diagram_js_lib_command_CommandIntercept
       catch { }
     }, true);
 
-    eventBus.on("import.done", (e) => {
+    eventBus.on("import.done", () => {
       try
       {
         this._elementRegistry.forEach(element => {
