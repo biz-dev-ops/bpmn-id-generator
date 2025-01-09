@@ -2,7 +2,7 @@
 
 ![Plugin Type](https://img.shields.io/badge/Plugin%20Type-BPMN-orange.svg)
 
-Generates element identifiers automatically based on the name of the element and the optional source reference.
+Generates BPMN element identifiers automatically based on the name of the element and the optional source reference.
 
 ## Development Setup
 

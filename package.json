@@ -1,7 +1,7 @@
 {
   "name": "bpmn-id-generator",
   "version": "0.0.1",
-  "description": "Generates element identifier based on element name.",
+  "description": "Generates BPMN element identifiers automatically based on the name of the element and the optional source reference.",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
