@@ -37,7 +37,6 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
     this._elementRegistry = elementRegistry;
 
     this.postExecuted("element.updateLabel", context => {
-      
       const { element } = context;
       this._changeId(element);
     }, true);
