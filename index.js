@@ -1,6 +1,6 @@
 "use strict";
 
 module.exports = {
-  name: "BizDevOps id generator",
+  name: "BizDevOps best practice id generator",
   script: "./dist/client.js",
 };
