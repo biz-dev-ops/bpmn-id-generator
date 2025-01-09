@@ -56,15 +56,23 @@ class UpdateIdCommandInterceptor extends diagram_js_lib_command_CommandIntercept
     }, true);
 
     this.postExecuted("elements.delete", () => {
-      this._elementRegistry.forEach(element => {
-        this._changeId(element);
-      });
+      try
+      {
+        this._elementRegistry.forEach(element => {
+          this._changeId(element);
+        });
+      }
+      catch { }
     }, true);
 
-    eventBus.on("import.done", () => {
-      this._elementRegistry.forEach(element => {
-        this._changeId(element);
-      });
+    eventBus.on("import.done", (e) => {
+      try
+      {
+        this._elementRegistry.forEach(element => {
+          this._changeId(element);
+        });
+      }
+      catch { }
     }, true);
   }
 }
