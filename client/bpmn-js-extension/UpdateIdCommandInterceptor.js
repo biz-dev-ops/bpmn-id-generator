@@ -2,13 +2,13 @@ import CommandInterceptor from "diagram-js/lib/command/CommandInterceptor.js";
 import diacritics from "diacritics";
 
 const ELEMENT_TYPE_MAPPING = {
-  "bpmn:Task" : "Task",
-  "bpmn:ServiceTask" : "Task",
-  "bpmn:ReceiveTask" : "CatchEvent",
-  "bpmn:SendTask" : "ThrowEvent",
-  "bpmn:ManualTask" : "ManualTask",
-  "bpmn:BusinessRuleTask" : "Task",
-  "bpmn:ScriptTask" : "Task",
+  "bpmn:Task": "Task",
+  "bpmn:ServiceTask": "Task",
+  "bpmn:ReceiveTask": "CatchEvent",
+  "bpmn:SendTask": "ThrowEvent",
+  "bpmn:ManualTask": "ManualTask",
+  "bpmn:BusinessRuleTask": "Task",
+  "bpmn:ScriptTask": "Task",
   "bpmn:UserTask": "UserTask",
 
   "bpmn:IntermediateCatchEvent": "CatchEvent",
@@ -35,6 +35,7 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
     super(eventBus);
     this._modeling = modeling;
     this._elementRegistry = elementRegistry;
+    this._updating = false;
 
     this.postExecuted("element.updateLabel", context => {
       const { element } = context;
@@ -42,18 +43,17 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
     }, true);
 
     this.postExecuted("elements.delete", () => {
-      try
-      {
-        this._elementRegistry.forEach(element => {
-          this._changeId(element);
-        });
+      if (this._updating) {
+        return;
       }
-      catch { }
+
+      this._elementRegistry.forEach(element => {
+        this._changeId(element);
+      });
     }, true);
 
     eventBus.on("import.done", () => {
-      try
-      {
+      try {
         this._elementRegistry.forEach(element => {
           this._changeId(element);
         });
@@ -64,29 +64,36 @@ class UpdateIdCommandInterceptor extends CommandInterceptor {
 }
 
 UpdateIdCommandInterceptor.prototype._changeId = function (element) {
-  const self = this;
-  const { businessObject } = element;
-  let level = 0;
-  let id;
+  this._updating = true;
 
-  while(true) {
-    id = createId(element, level);
-    if(!id) {
-      return;
+  try {
+    const self = this;
+    const { businessObject } = element;
+    let level = 0;
+    let id;
+
+    while (true) {
+      id = createId(element, level);
+      if (!id) {
+        return;
+      }
+
+      if (businessObject.id === id) {
+        return;
+      }
+
+      if (!this._elementRegistry.get(id)) {
+        break;
+      }
+
+      level++;
     }
 
-    if (businessObject.id === id) {
-      return;
-    }
-
-    if(!this._elementRegistry.get(id)) {
-      break;
-    }
-    
-    level++;
+    self._modeling.updateProperties(element, { id: id });
   }
-
-  self._modeling.updateProperties(element, { id: id });
+  finally {
+    this._updating = false;
+  }
 }
 
 const createId = function (element, level = 0) {
@@ -104,7 +111,7 @@ const createId = function (element, level = 0) {
     return;
   }
 
-  if(sourceRef) {
+  if (sourceRef) {
     name += ` from ${sourceRef.name}`;
   }
 
@@ -115,7 +122,7 @@ const createId = function (element, level = 0) {
     name = "N" + name;
   }
 
-  if(level > 0) {
+  if (level > 0) {
     name += level;
   }
 
